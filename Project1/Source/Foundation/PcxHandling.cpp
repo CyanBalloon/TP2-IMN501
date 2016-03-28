@@ -2,7 +2,8 @@
 
 void LoadPCX(const string &ao_FileName, RGBImage &ao_Image)
 {
-	FILE* po_File = fopen(ao_FileName.c_str(),"rb");
+	FILE* po_File;
+	fopen_s(&po_File, ao_FileName.c_str(), "rb");
 
 	PCXHeader	o_Header;
 

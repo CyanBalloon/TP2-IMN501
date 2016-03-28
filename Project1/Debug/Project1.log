@@ -1,7 +1,16 @@
 ﻿  MD2Model.cpp
-  Generating Code...
-  Compiling...
+  MD2AnimationList.cpp
   main.cpp
+  Vector3.cpp
+  RGBImage.cpp
+  Point2.cpp
+  PcxHandling.cpp
+  Matrix4.cpp
+  ColorRGBA.cpp
+  ColorRGB.cpp
+  BitmapHandling.cpp
+  CameraMouse.cpp
   Generating Code...
-  Project1.vcxproj -> C:\Users\CyanBalloon\Google Drive\Université\IMN501 - Animation et rendu temps réel\tps\tp2 - solution\Debug\Project1.exe
-  Project1.vcxproj -> C:\Users\CyanBalloon\Google Drive\Université\IMN501 - Animation et rendu temps réel\tps\tp2 - solution\Debug\Project1.pdb (Partial PDB)
+  LINK : C:\Users\CyanBalloon\Documents\GitHub\TP2-IMN501\Debug\Project1.exe not found or not built by the last incremental link; performing full link
+  Project1.vcxproj -> C:\Users\CyanBalloon\Documents\GitHub\TP2-IMN501\Debug\Project1.exe
+  Project1.vcxproj -> C:\Users\CyanBalloon\Documents\GitHub\TP2-IMN501\Debug\Project1.pdb (Partial PDB)

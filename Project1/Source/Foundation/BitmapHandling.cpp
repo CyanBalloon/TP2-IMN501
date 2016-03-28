@@ -2,8 +2,8 @@
 
 void SaveBmp(const string &aFileName,const RGBImage &aImage)
 {
-	FILE* pFile = fopen(aFileName.c_str(),"wb+");
-	
+	FILE* pFile;
+	fopen_s(&pFile, aFileName.c_str(), "rb");
 	BitmapFileHeader oFileHeader;
 	BitmapInfoHeader oInfoHeader;
 
@@ -58,7 +58,8 @@ void SaveBmp(const string &aFileName,const RGBImage &aImage)
 
 void LoadBmp(const string &aFileName, RGBImage &aImage)
 {
-	FILE* pFile = fopen(aFileName.c_str(),"rb+");
+	FILE* pFile;
+	fopen_s(&pFile, aFileName.c_str(), "rb+");
 
 	BitmapFileHeader oFileHeader;
 	BitmapInfoHeader oInfoHeader;
