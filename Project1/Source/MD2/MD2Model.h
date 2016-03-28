@@ -4,7 +4,6 @@
 #include <string>
 
 #include "MD2AnimationList.h"
-#include "../Foundation/Vector3.h"
 #include "MD2Types.h"
 #include "../../Source/ThirdParty/glut.h"
 
@@ -21,7 +20,7 @@ public:
 	#define MD2_VERSION 8
 	#define MD2_IDENT (('2'<<24) + ('P'<<16) + ('D'<<8) + 'I')
 
-	static Vector3  m_kAnorms[162];
+	static vec3_t  m_kAnorms[162];
 
 	md2_header_t    m_kHeader;
 	md2_skin_t      *m_pSkins;

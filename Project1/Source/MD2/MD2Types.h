@@ -1,7 +1,6 @@
 #ifndef MD2_TYPES_H_
 #define MD2_TYPES_H_
-
-#include "../Foundation/Vector3.h"
+typedef float vec3_t[3];
 
 typedef struct {
 	int ident;
@@ -42,8 +41,8 @@ typedef struct {
 } md2_texCoord_t;
 
 typedef struct {
-	Vector3         scale;
-	Vector3         translate;
+	vec3_t         scale;
+	vec3_t         translate;
 	char            name[16];
 	md2_vertex_t    *verts;
 } md2_frame_t;
