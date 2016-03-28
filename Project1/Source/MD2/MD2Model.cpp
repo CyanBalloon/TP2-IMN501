@@ -48,8 +48,8 @@ void MD2Model::LoadModel(const string &ao_FileName) {
 		m_pFrames[i].verts = new md2_vertex_t[m_kHeader.num_vertices];
 
 		// lecture des données de la frame
-		file.read((char *)&m_pFrames[i].scale, sizeof(Vector3));
-		file.read((char *)&m_pFrames[i].translate, sizeof(Vector3));
+		file.read((char *)&m_pFrames[i].scale, sizeof(vec3_t));
+		file.read((char *)&m_pFrames[i].translate, sizeof(vec3_t));
 		file.read((char *)&m_pFrames[i].name, sizeof(char) * 16);
 		file.read((char *)m_pFrames[i].verts, sizeof(md2_vertex_t) * m_kHeader.num_vertices);
 	}
@@ -97,23 +97,53 @@ void MD2Model::SetAnimationSpeed(float af_Speed){}
 float MD2Model::GetAnimationSpeed() const{ return 0.0f;}
 
 void MD2Model::Render(float af_DeltaT) {
-	float tf_Black[4] = { 0,0,0,0 };
-	float tf_White[4] = { 1,1,1,1 };
+	// calcul de l'index maximum d'une frame du modèle
+	int iMaxFrame = m_kHeader.num_frames - 1;
+	float compteur = af_DeltaT;
+	iMaxFrame / compteur;
+	int iFrame = 1;
+	// vérification de la validité de iFrame
+	//if ((iFrame < 0) || (iFrame > iMaxFrame))
+	//	return;
 
-	glMaterialfv(GL_FRONT, GL_AMBIENT, tf_White);
-	glMaterialfv(GL_FRONT, GL_EMISSION, tf_Black);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, tf_White);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, tf_Black);
 
+	// activation de la texture du modèle
 	glBindTexture(GL_TEXTURE_2D, m_uiTexID);
 
-	glPushMatrix();
+	// dessin du modèle
+	glBegin(GL_TRIANGLES);
+	// dessine chaque triangle
+	for (int i = 0; i < m_kHeader.num_tris; i++)
+	{
+		// dessigne chaque vertex du triangle
+		for (int k = 0; k < 3; k++)
+		{
+			md2_frame_t *pFrame = &m_pFrames[iFrame];
+			md2_vertex_t *pVert = &pFrame->verts[m_pTriangles[i].vertex[k]];
 
-	glBegin(GL_QUADS);
 
+			// [coordonnées de texture]
+			GLfloat s = (GLfloat)m_pTexCoords[m_pTriangles[i].st[k]].s / m_kHeader.skinwidth;
+			GLfloat t = (GLfloat)m_pTexCoords[m_pTriangles[i].st[k]].t / m_kHeader.skinheight;
+
+			// application des coordonnées de texture
+			glTexCoord2f(s, t);
+
+			// [normale]
+			glNormal3fv(m_kAnorms[pVert->normalIndex]);
+
+			// [vertex]
+			vec3_t v;
+
+			// calcul de la position absolue du vertex et redimensionnement
+			v[0] = (pFrame->scale[0] * pVert->v[0] + pFrame->translate[0]) * m_fScale;
+			v[1] = (pFrame->scale[1] * pVert->v[1] + pFrame->translate[1]) * m_fScale;
+			v[2] = (pFrame->scale[2] * pVert->v[2] + pFrame->translate[2]) * m_fScale;
+
+			glVertex3fv(v);
+		}
+	}
 	glEnd();
-
-	glPopMatrix();
 }
 
 MD2Model::~MD2Model(){}
