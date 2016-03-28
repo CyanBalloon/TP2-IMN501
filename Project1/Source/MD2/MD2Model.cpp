@@ -1,4 +1,6 @@
 #include "MD2Model.h"
+#include "../Foundation/RGBImage.h"
+#include "../Foundation/PcxHandling.h"
 #include <fstream>
 
 MD2Model::MD2Model(){}
@@ -60,7 +62,28 @@ void MD2Model::LoadModel(const string &ao_FileName) {
 	file.close();
 }
 
-void MD2Model::LoadTexture(const std::string &ao_FileName){}
+void MD2Model::LoadTexture(const std::string &ao_FileName) {
+	if (m_uiTexID != 0)
+	{
+		glDeleteTextures(1, &m_uiTexID);
+	}
+
+	glGenTextures(1, &m_uiTexID);
+
+	RGBImage o_TmpImage;
+	glBindTexture(GL_TEXTURE_2D, m_uiTexID);
+
+	LoadPCX(ao_FileName, o_TmpImage);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, o_TmpImage.GetWidth(), o_TmpImage.GetHeight(), 0, GL_RGB, GL_FLOAT, o_TmpImage.GetRasterData());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+	glBindTexture(GL_TEXTURE_2D, NULL);
+}
+
 void MD2Model::FreeResources(){}
 void MD2Model::AddAnimationData(const AnimationData& ao_AnimationData){}
 
@@ -73,6 +96,24 @@ void MD2Model::PreviousAnimation(){}
 void MD2Model::SetAnimationSpeed(float af_Speed){}
 float MD2Model::GetAnimationSpeed() const{ return 0.0f;}
 
-void MD2Model::Render(float af_DeltaT){}
+void MD2Model::Render(float af_DeltaT) {
+	float tf_Black[4] = { 0,0,0,0 };
+	float tf_White[4] = { 1,1,1,1 };
+
+	glMaterialfv(GL_FRONT, GL_AMBIENT, tf_White);
+	glMaterialfv(GL_FRONT, GL_EMISSION, tf_Black);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, tf_White);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, tf_Black);
+
+	glBindTexture(GL_TEXTURE_2D, m_uiTexID);
+
+	glPushMatrix();
+
+	glBegin(GL_QUADS);
+
+	glEnd();
+
+	glPopMatrix();
+}
 
 MD2Model::~MD2Model(){}
