@@ -118,7 +118,7 @@ void MD2Model::PreviousAnimation() { frame_index--; }
 
 void MD2Model::SetAnimationSpeed(float af_Speed) {
 	current_speed = af_Speed;
-	frames_for_animation = (current_speed == 0.0) ? 1 : BASE_SPEED / current_speed;
+	frames_for_animation = abs(BASE_SPEED / current_speed);
 	animation_is_playing = true;
 }
 
@@ -130,11 +130,16 @@ void MD2Model::Render(float af_DeltaT) {
 	if (animation_is_playing)
 	{
 		frame_index = (alpha * iMaxFrame);
-		current_frame_animation++;
+		if (current_speed > 0.0f)
+			current_frame_animation++;
+		else
+			current_frame_animation--;
 	}
-
+	// l'animation 
 	if (current_frame_animation >= frames_for_animation) 
 		current_frame_animation = 0;
+	if (current_frame_animation < 0)
+		current_frame_animation = frames_for_animation;
 
 	if (frame_index < 0)
 		frame_index = iMaxFrame;
