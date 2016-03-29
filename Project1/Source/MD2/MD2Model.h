@@ -31,6 +31,7 @@ public:
 	md2_frame_t     *m_pFrames;
 	int             *m_pGLcmds;
 	float				alpha;
+	float			frame_index;
 	int current_frame = 0;
 	int overkill;
 	int frames_for_animation = BASE_SPEED;

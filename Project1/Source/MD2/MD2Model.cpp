@@ -91,8 +91,16 @@ void MD2Model::AddAnimationData(const AnimationData& ao_AnimationData){}
 void MD2Model::PlayAnimation(bool ab_PlayAnim){}
 bool MD2Model::IsAnimationPlaying() const { return true; }
 
-void MD2Model::NextAnimation(){}
-void MD2Model::PreviousAnimation(){}
+void MD2Model::NextAnimation(){
+	//  trouver comment faire render 1 frame
+	frame_index++;
+	frames_for_animation = 0.0;
+}
+void MD2Model::PreviousAnimation()
+{
+	//  trouver comment faire render 1 frame
+	frames_for_animation = 0.0;
+}
 
 void MD2Model::SetAnimationSpeed(float af_Speed) {
 	current_speed = af_Speed;
@@ -106,7 +114,7 @@ float MD2Model::GetAnimationSpeed() const {
 void MD2Model::Render(float af_DeltaT) {
 	int iMaxFrame = (m_kHeader.num_frames - 1);
 	float alpha = float(current_frame_animation) / float(frames_for_animation);
-	float frame_index = (alpha * iMaxFrame);
+	frame_index = (alpha * iMaxFrame);
 	current_frame_animation++;
 
 	if (current_frame_animation >= frames_for_animation - 1) {
