@@ -2,6 +2,7 @@
 #include "../Foundation/RGBImage.h"
 #include "../Foundation/PcxHandling.h"
 #include <fstream>
+#include <iostream>
 
 MD2Model::MD2Model(){}
 
@@ -93,8 +94,11 @@ bool MD2Model::IsAnimationPlaying() const { return true; }
 void MD2Model::NextAnimation(){}
 void MD2Model::PreviousAnimation(){}
 
-void MD2Model::SetAnimationSpeed(float af_Speed){}
-float MD2Model::GetAnimationSpeed() const{ return 0.0f;}
+void MD2Model::SetAnimationSpeed(float af_Speed) { 
+	current_speed = (af_Speed < 0) ? 0 : af_Speed;
+}
+
+float MD2Model::GetAnimationSpeed() const { return current_speed; }
 
 void MD2Model::Render(float af_DeltaT) {
 	// calcul de l'index maximum d'une frame du modèle

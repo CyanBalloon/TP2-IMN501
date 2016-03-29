@@ -21,6 +21,7 @@ public:
 	#define MD2_IDENT (('2'<<24) + ('P'<<16) + ('D'<<8) + 'I')
 
 	vec3_t  m_kAnorms[162];
+	float current_speed = 10.0f;
 
 	md2_header_t    m_kHeader;
 	md2_skin_t      *m_pSkins;
