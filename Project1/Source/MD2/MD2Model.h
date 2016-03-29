@@ -36,7 +36,7 @@ public:
 	int             *m_pGLcmds;
 	float			alpha;
 	float			frame_index;
-	bool			animation_is_playing = false;
+	bool			animation_is_playing = true;
 	int current_frame = 0;
 	int overkill;
 	int frames_for_animation = BASE_SPEED;

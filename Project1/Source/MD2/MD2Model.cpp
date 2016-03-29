@@ -118,8 +118,8 @@ void MD2Model::PreviousAnimation() { frame_index--; }
 
 void MD2Model::SetAnimationSpeed(float af_Speed) {
 	current_speed = af_Speed;
-	frames_for_animation = BASE_SPEED / current_speed;
-	animation_is_playing = false;
+	frames_for_animation = (current_speed == 0.0) ? 1 : BASE_SPEED / current_speed;
+	animation_is_playing = true;
 }
 
 float MD2Model::GetAnimationSpeed() const { return current_speed; }
@@ -127,13 +127,13 @@ float MD2Model::GetAnimationSpeed() const { return current_speed; }
 void MD2Model::Render(float af_DeltaT) {
 	int iMaxFrame = anim_v.back().mf_FrameEnd;
 	float alpha = float(current_frame_animation) / float(frames_for_animation);
-	if (!animation_is_playing)
+	if (animation_is_playing)
 	{
 		frame_index = (alpha * iMaxFrame);
 		current_frame_animation++;
 	}
 
-	if (current_frame_animation >= frames_for_animation - 1) 
+	if (current_frame_animation >= frames_for_animation) 
 		current_frame_animation = 0;
 
 	if (frame_index < 0)
@@ -142,8 +142,9 @@ void MD2Model::Render(float af_DeltaT) {
 	if (frame_index > iMaxFrame)
 		frame_index = 0;
 
-	if (frame_index > m_kHeader.num_frames - 1)
+	if (frame_index >= m_kHeader.num_frames - 1)
 		return;
+
 	// activation de la texture du modèle
 	glBindTexture(GL_TEXTURE_2D, m_uiTexID);
 
@@ -161,7 +162,6 @@ void MD2Model::Render(float af_DeltaT) {
 
 			md2_vertex_t *pVertA = &pFrameA->verts[m_pTriangles[i].vertex[k]];
 			md2_vertex_t *pVertB = &pFrameB->verts[m_pTriangles[i].vertex[k]];
-
 
 			// [coordonnées de texture]
 			GLfloat s = (GLfloat)m_pTexCoords[m_pTriangles[i].st[k]].s / m_kHeader.skinwidth;
