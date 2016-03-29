@@ -35,7 +35,7 @@ public:
 	int             *m_pGLcmds;
 	float				alpha;
 	float			frame_index;
-	bool			next_frame = false;
+	bool			animation_is_playing = false;
 	bool			previous_frame = false;
 	int current_frame = 0;
 	int overkill;

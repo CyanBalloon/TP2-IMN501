@@ -109,35 +109,23 @@ void MD2Model::FreeResources() {
 
 void MD2Model::AddAnimationData(const AnimationData& ao_AnimationData){}
 
-void MD2Model::PlayAnimation(bool ab_PlayAnim){}
-bool MD2Model::IsAnimationPlaying() const { return current_speed != 0.0; }
-
-void MD2Model::NextAnimation()
-{
-	frame_index++;
-	next_frame = true;
-}
-void MD2Model::PreviousAnimation()
-{
-	frame_index--;
-	previous_frame = true;
-}
+void MD2Model::PlayAnimation(bool ab_PlayAnim) { animation_is_playing = ab_PlayAnim; }
+bool MD2Model::IsAnimationPlaying() const { return animation_is_playing; }
+void MD2Model::NextAnimation() { frame_index++; }
+void MD2Model::PreviousAnimation() { frame_index--; }
 
 void MD2Model::SetAnimationSpeed(float af_Speed) {
 	current_speed = af_Speed;
 	frames_for_animation = BASE_SPEED / current_speed;
-	previous_frame = false;
-	next_frame = false;
+	animation_is_playing = false;
 }
 
-float MD2Model::GetAnimationSpeed() const {
-	return current_speed;
-}
+float MD2Model::GetAnimationSpeed() const { return current_speed; }
 
 void MD2Model::Render(float af_DeltaT) {
 	int iMaxFrame = (m_kHeader.num_frames - 1);
 	float alpha = float(current_frame_animation) / float(frames_for_animation);
-	if (!previous_frame && !next_frame)
+	if (!animation_is_playing)
 	{
 	frame_index = (alpha * iMaxFrame);
 	current_frame_animation++;
@@ -150,6 +138,7 @@ void MD2Model::Render(float af_DeltaT) {
 		frame_index = iMaxFrame;
 	if (frame_index > iMaxFrame)
 		frame_index = 0;
+
 	// activation de la texture du modèle
 	glBindTexture(GL_TEXTURE_2D, m_uiTexID);
 
@@ -161,8 +150,12 @@ void MD2Model::Render(float af_DeltaT) {
 		// dessigne chaque vertex du triangle
 		for (int k = 0; k < 3; k++)
 		{
-			md2_frame_t *pFrame = &m_pFrames[int(frame_index)];
-			md2_vertex_t *pVert = &pFrame->verts[m_pTriangles[i].vertex[k]];
+			int frame_to_show = (frame_index >= iMaxFrame) ? frame_index - 1 : frame_index;
+			md2_frame_t *pFrameA = &m_pFrames[int(frame_to_show)];
+			md2_frame_t *pFrameB = &m_pFrames[int(frame_to_show+1)];
+
+			md2_vertex_t *pVertA = &pFrameA->verts[m_pTriangles[i].vertex[k]];
+			md2_vertex_t *pVertB = &pFrameB->verts[m_pTriangles[i].vertex[k]];
 
 
 			// [coordonnées de texture]
@@ -173,16 +166,37 @@ void MD2Model::Render(float af_DeltaT) {
 			glTexCoord2f(s, t);
 
 			// [normale]
-			glNormal3fv(m_kAnorms[pVert->normalIndex]);
+			vec3_t normA, normB, n;
+
+			memcpy(normA, m_kAnorms[pVertA->normalIndex], 3 * sizeof(float));
+			memcpy(normB, m_kAnorms[pVertB->normalIndex], 3 * sizeof(float));
+
+			// interpolation linéaire
+			n[0] = normA[0] + alpha * (normB[0] - normA[0]);
+			n[1] = normA[1] + alpha * (normB[1] - normA[1]);
+			n[2] = normA[2] + alpha * (normB[2] - normA[2]);
+
+			// spécification de la normale
+			glNormal3fv(n);
 
 			// [vertex]
-			vec3_t v;
+			vec3_t vecA, vecB, v;
 
-			// calcul de la position absolue du vertex et redimensionnement
-			v[0] = (pFrame->scale[0] * pVert->v[0] + pFrame->translate[0]) * 1;
-			v[1] = (pFrame->scale[1] * pVert->v[1] + pFrame->translate[1]) * 1;
-			v[2] = (pFrame->scale[2] * pVert->v[2] + pFrame->translate[2]) * 1;
+			// calcul de la position absolue des vertices
+			vecA[0] = pFrameA->scale[0] * pVertA->v[0] + pFrameA->translate[0];
+			vecA[1] = pFrameA->scale[1] * pVertA->v[1] + pFrameA->translate[1];
+			vecA[2] = pFrameA->scale[2] * pVertA->v[2] + pFrameA->translate[2];
 
+			vecB[0] = pFrameB->scale[0] * pVertB->v[0] + pFrameB->translate[0];
+			vecB[1] = pFrameB->scale[1] * pVertB->v[1] + pFrameB->translate[1];
+			vecB[2] = pFrameB->scale[2] * pVertB->v[2] + pFrameB->translate[2];
+
+			// interpolation linéaire et redimensionnement
+			v[0] = (vecA[0] + alpha * (vecB[0] - vecA[0]));
+			v[1] = (vecA[1] + alpha * (vecB[1] - vecA[1]));
+			v[2] = (vecA[2] + alpha * (vecB[2] - vecA[2]));
+
+			// dessin du vertex
 			glVertex3fv(v);
 		}
 	}
