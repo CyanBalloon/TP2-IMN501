@@ -21,7 +21,10 @@ public:
 	#define MD2_VERSION 8
 	#define MD2_IDENT (('2'<<24) + ('P'<<16) + ('D'<<8) + 'I')
 
-	vec3_t  m_kAnorms[162];
+	vec3_t m_kAnorms[162] = {
+		#include    "anorms.h"
+	};
+
 	float current_speed = 1.0f;
 
 	md2_header_t    m_kHeader;

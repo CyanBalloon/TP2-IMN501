@@ -85,11 +85,32 @@ void MD2Model::LoadTexture(const std::string &ao_FileName) {
 	glBindTexture(GL_TEXTURE_2D, NULL);
 }
 
-void MD2Model::FreeResources(){}
+void MD2Model::FreeResources() {
+	if (m_pSkins)
+		delete[] m_pSkins;
+
+	if (m_pTexCoords)
+		delete[] m_pTexCoords;
+
+	if (m_pTriangles)
+		delete[] m_pTriangles;
+
+	if (m_pFrames)
+	{
+		for (int i = 0; i < m_kHeader.num_frames; i++)
+		{
+			if (m_pFrames[i].verts)
+				delete[] m_pFrames[i].verts;
+		}
+
+		delete[] m_pFrames;
+	}
+}
+
 void MD2Model::AddAnimationData(const AnimationData& ao_AnimationData){}
 
 void MD2Model::PlayAnimation(bool ab_PlayAnim){}
-bool MD2Model::IsAnimationPlaying() const { return true; }
+bool MD2Model::IsAnimationPlaying() const { return current_speed != 0.0; }
 
 void MD2Model::NextAnimation()
 {
