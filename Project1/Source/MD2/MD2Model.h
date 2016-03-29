@@ -29,7 +29,8 @@ public:
 	md2_triangle_t  *m_pTriangles;
 	md2_frame_t     *m_pFrames;
 	int             *m_pGLcmds;
-	int				frame;
+	float				frame;
+	float nb_frame;
 
 	GLfloat         m_fScale;
 	GLuint          m_uiTexID;
