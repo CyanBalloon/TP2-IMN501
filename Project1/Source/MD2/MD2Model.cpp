@@ -88,7 +88,7 @@ void MD2Model::FreeResources(){}
 void MD2Model::AddAnimationData(const AnimationData& ao_AnimationData){}
 
 void MD2Model::PlayAnimation(bool ab_PlayAnim){}
-bool MD2Model::IsAnimationPlaying() const{ return true;}
+bool MD2Model::IsAnimationPlaying() const { return true; }
 
 void MD2Model::NextAnimation(){}
 void MD2Model::PreviousAnimation(){}
@@ -101,7 +101,8 @@ void MD2Model::Render(float af_DeltaT) {
 	int iMaxFrame = m_kHeader.num_frames - 1;
 	float compteur = af_DeltaT;
 	iMaxFrame / compteur;
-	int iFrame = 1;
+	int iFrame = frame % iMaxFrame;
+	frame++;
 	// vérification de la validité de iFrame
 	//if ((iFrame < 0) || (iFrame > iMaxFrame))
 	//	return;
@@ -136,9 +137,9 @@ void MD2Model::Render(float af_DeltaT) {
 			vec3_t v;
 
 			// calcul de la position absolue du vertex et redimensionnement
-			v[0] = (pFrame->scale[0] * pVert->v[0] + pFrame->translate[0]) * m_fScale;
-			v[1] = (pFrame->scale[1] * pVert->v[1] + pFrame->translate[1]) * m_fScale;
-			v[2] = (pFrame->scale[2] * pVert->v[2] + pFrame->translate[2]) * m_fScale;
+			v[0] = (pFrame->scale[0] * pVert->v[0] + pFrame->translate[0]) * 1;
+			v[1] = (pFrame->scale[1] * pVert->v[1] + pFrame->translate[1]) * 1;
+			v[2] = (pFrame->scale[2] * pVert->v[2] + pFrame->translate[2]) * 1;
 
 			glVertex3fv(v);
 		}

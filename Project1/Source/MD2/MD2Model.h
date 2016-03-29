@@ -20,7 +20,7 @@ public:
 	#define MD2_VERSION 8
 	#define MD2_IDENT (('2'<<24) + ('P'<<16) + ('D'<<8) + 'I')
 
-	static vec3_t  m_kAnorms[162];
+	vec3_t  m_kAnorms[162];
 
 	md2_header_t    m_kHeader;
 	md2_skin_t      *m_pSkins;
@@ -28,6 +28,7 @@ public:
 	md2_triangle_t  *m_pTriangles;
 	md2_frame_t     *m_pFrames;
 	int             *m_pGLcmds;
+	int				frame;
 
 	GLfloat         m_fScale;
 	GLuint          m_uiTexID;
