@@ -17,11 +17,12 @@ using namespace std;
 class MD2Model
 {
 public:
+	#define BASE_SPEED 150
 	#define MD2_VERSION 8
 	#define MD2_IDENT (('2'<<24) + ('P'<<16) + ('D'<<8) + 'I')
 
 	vec3_t  m_kAnorms[162];
-	float current_speed = 10.0f;
+	float current_speed = 1.0f;
 
 	md2_header_t    m_kHeader;
 	md2_skin_t      *m_pSkins;
@@ -29,8 +30,11 @@ public:
 	md2_triangle_t  *m_pTriangles;
 	md2_frame_t     *m_pFrames;
 	int             *m_pGLcmds;
-	float				frame;
-	float nb_frame;
+	float				alpha;
+	int current_frame = 0;
+	int overkill;
+	int frames_for_animation = BASE_SPEED;
+	int current_frame_animation = 1;
 
 	GLfloat         m_fScale;
 	GLuint          m_uiTexID;

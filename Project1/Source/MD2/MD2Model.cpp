@@ -2,6 +2,7 @@
 #include "../Foundation/RGBImage.h"
 #include "../Foundation/PcxHandling.h"
 #include <fstream>
+#include <iostream>
 
 MD2Model::MD2Model(){}
 
@@ -93,22 +94,27 @@ bool MD2Model::IsAnimationPlaying() const { return true; }
 void MD2Model::NextAnimation(){}
 void MD2Model::PreviousAnimation(){}
 
-void MD2Model::SetAnimationSpeed(float af_Speed){}
-float MD2Model::GetAnimationSpeed() const{ return 0.0f;}
+void MD2Model::SetAnimationSpeed(float af_Speed) {
+	current_speed = af_Speed;
+	frames_for_animation = BASE_SPEED / current_speed;
+}
+
+float MD2Model::GetAnimationSpeed() const {
+	return current_speed;
+}
 
 void MD2Model::Render(float af_DeltaT) {
-	// calcul de l'index maximum d'une frame du modèle
-	int iMaxFrame = m_kHeader.num_frames - 1;
-	frame = frame + af_DeltaT;
-	nb_frame = 1 / af_DeltaT;
-	float frame_actuelle = (frame / 1.0) * iMaxFrame;
-	if (frame_actuelle > iMaxFrame)
-	{
-		frame = 0;
-		nb_frame = 0;
-		return;
+	int iMaxFrame = (m_kHeader.num_frames - 1);
+	float alpha = float(current_frame_animation) / float(frames_for_animation);
+	float frame_index = (alpha * iMaxFrame);
+	current_frame_animation++;
+
+	if (current_frame_animation >= frames_for_animation - 1) {
+		current_frame_animation = 0;
 	}
-		// activation de la texture du modèle
+	if (alpha > 1) return;
+
+	// activation de la texture du modèle
 	glBindTexture(GL_TEXTURE_2D, m_uiTexID);
 
 	// dessin du modèle
@@ -119,7 +125,7 @@ void MD2Model::Render(float af_DeltaT) {
 		// dessigne chaque vertex du triangle
 		for (int k = 0; k < 3; k++)
 		{
-			md2_frame_t *pFrame = &m_pFrames[int(frame_actuelle)];
+			md2_frame_t *pFrame = &m_pFrames[int(frame_index)];
 			md2_vertex_t *pVert = &pFrame->verts[m_pTriangles[i].vertex[k]];
 
 
