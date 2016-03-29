@@ -2,6 +2,7 @@
 #define MD2MODEL_H_
 
 #include <string>
+#include <vector>
 
 #include "MD2AnimationList.h"
 #include "MD2Types.h"
@@ -33,14 +34,14 @@ public:
 	md2_triangle_t  *m_pTriangles;
 	md2_frame_t     *m_pFrames;
 	int             *m_pGLcmds;
-	float				alpha;
+	float			alpha;
 	float			frame_index;
 	bool			animation_is_playing = false;
-	bool			previous_frame = false;
 	int current_frame = 0;
 	int overkill;
 	int frames_for_animation = BASE_SPEED;
 	int current_frame_animation = 1;
+	vector<AnimationData> anim_v;
 
 	GLfloat         m_fScale;
 	GLuint          m_uiTexID;

@@ -107,7 +107,9 @@ void MD2Model::FreeResources() {
 	}
 }
 
-void MD2Model::AddAnimationData(const AnimationData& ao_AnimationData){}
+void MD2Model::AddAnimationData(const AnimationData& ao_AnimationData) {
+	anim_v.push_back(ao_AnimationData);
+}
 
 void MD2Model::PlayAnimation(bool ab_PlayAnim) { animation_is_playing = ab_PlayAnim; }
 bool MD2Model::IsAnimationPlaying() const { return animation_is_playing; }
@@ -123,22 +125,25 @@ void MD2Model::SetAnimationSpeed(float af_Speed) {
 float MD2Model::GetAnimationSpeed() const { return current_speed; }
 
 void MD2Model::Render(float af_DeltaT) {
-	int iMaxFrame = (m_kHeader.num_frames - 1);
+	int iMaxFrame = anim_v.back().mf_FrameEnd;
 	float alpha = float(current_frame_animation) / float(frames_for_animation);
 	if (!animation_is_playing)
 	{
-	frame_index = (alpha * iMaxFrame);
-	current_frame_animation++;
+		frame_index = (alpha * iMaxFrame);
+		current_frame_animation++;
 	}
-	if (current_frame_animation >= frames_for_animation - 1) {
+
+	if (current_frame_animation >= frames_for_animation - 1) 
 		current_frame_animation = 0;
-	}
-	if (alpha > 1) return;
+
 	if (frame_index < 0)
 		frame_index = iMaxFrame;
+
 	if (frame_index > iMaxFrame)
 		frame_index = 0;
 
+	if (frame_index > m_kHeader.num_frames - 1)
+		return;
 	// activation de la texture du modèle
 	glBindTexture(GL_TEXTURE_2D, m_uiTexID);
 
