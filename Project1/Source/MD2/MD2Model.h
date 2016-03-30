@@ -34,7 +34,7 @@ public:
 	md2_triangle_t  *m_pTriangles;
 	md2_frame_t     *m_pFrames;
 	int             *m_pGLcmds;
-	float			alpha;
+	float			alpha;   
 	float			frame_index;
 	bool			animation_is_playing = true;
 	int current_frame = 0;

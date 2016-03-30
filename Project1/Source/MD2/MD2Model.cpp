@@ -63,7 +63,8 @@ void MD2Model::LoadModel(const string &ao_FileName) {
 	file.close();
 }
 
-void MD2Model::LoadTexture(const std::string &ao_FileName) {
+void MD2Model::LoadTexture(const std::string &ao_FileName) 
+{
 	if (m_uiTexID != 0)
 	{
 		glDeleteTextures(1, &m_uiTexID);
@@ -85,7 +86,9 @@ void MD2Model::LoadTexture(const std::string &ao_FileName) {
 	glBindTexture(GL_TEXTURE_2D, NULL);
 }
 
-void MD2Model::FreeResources() {
+void MD2Model::FreeResources() 
+// Supprimer les donnees membres qui ne seront plus utilisees
+{
 	if (m_pSkins)
 		delete[] m_pSkins;
 
@@ -107,35 +110,44 @@ void MD2Model::FreeResources() {
 	}
 }
 
-void MD2Model::AddAnimationData(const AnimationData& ao_AnimationData) {
+void MD2Model::AddAnimationData(const AnimationData& ao_AnimationData) 
+// Ajouter le data de l'animation a l'animation en cours
+{
 	anim_v.push_back(ao_AnimationData);
 }
-
-void MD2Model::PlayAnimation(bool ab_PlayAnim) { animation_is_playing = ab_PlayAnim; }
+// Demarer l'animation
+void MD2Model::PlayAnimation(bool ab_PlayAnim) { animation_is_playing = ab_PlayAnim; }  
+// Verifier si l'animation est en train de jouer
 bool MD2Model::IsAnimationPlaying() const { return animation_is_playing; }
+// Si l'animation est sur pause, afficher le frame suivant
 void MD2Model::NextAnimation() { frame_index++; }
+// Si l'animation est sur pause, afficher le frame precedent
 void MD2Model::PreviousAnimation() { frame_index--; }
 
+// Fixer la vitesse de l'animation
 void MD2Model::SetAnimationSpeed(float af_Speed) {
 	current_speed = af_Speed;
 	frames_for_animation = abs(BASE_SPEED / current_speed);
 	animation_is_playing = true;
 }
 
+// Retourner la vitesse de l'animation
 float MD2Model::GetAnimationSpeed() const { return current_speed; }
 
+//  Afficher l'animation frame par frame. Si necessaire, faire l'interpolation entre 2 frames.
 void MD2Model::Render(float af_DeltaT) {
 	int iMaxFrame = anim_v.back().mf_FrameEnd;
 	float alpha = float(current_frame_animation) / float(frames_for_animation);
 	if (animation_is_playing)
 	{
 		frame_index = (alpha * iMaxFrame);
+		// Regarder la vitesse de l'animation , si elle est negative, jouer l'animation à reculons
 		if (current_speed > 0.0f)
 			current_frame_animation++;
 		else
 			current_frame_animation--;
 	}
-	// l'animation 
+
 	if (current_frame_animation >= frames_for_animation) 
 		current_frame_animation = 0;
 	if (current_frame_animation < 0)
